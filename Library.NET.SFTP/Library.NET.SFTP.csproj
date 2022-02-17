@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>annotations</Nullable>
+    <Version>2022.2.16.1</Version>
+    <Authors>James Lynch</Authors>
+    <Company>Crimson Orion Software</Company>
+    <Description>Library utilizing WinSCP for file transfers for applications targeting .NET 6.0+</Description>
+    <Copyright>2022</Copyright>
+    <PackageProjectUrl>https://github.com/CrimsonOrion/Library.NET</PackageProjectUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="WinSCP" Version="5.19.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Library.NET.Helpers\Library.NET.Helpers.csproj" />
+    <ProjectReference Include="..\Library.NET.Logging\Library.NET.Logging.csproj" />
+  </ItemGroup>
+
+</Project>
