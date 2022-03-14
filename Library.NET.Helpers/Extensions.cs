@@ -94,21 +94,6 @@ public static class Extensions
         return ssn;
     }
 
-    public static string FormatLocation(this string location)
-    {
-        if (string.IsNullOrWhiteSpace(location))
-        {
-            return string.Empty;
-        }
-
-        if (!location.Contains('-'))
-        {
-            var tempLoc = location.PadLeft(10, '0');
-            location = tempLoc[..4] + "-" + tempLoc.Substring(4, 3) + "-" + tempLoc[7..];
-        }
-        return location;
-    }
-
     public static string GetContentType(this FileInfo fileInfo) => new FileExtensionContentTypeProvider().TryGetContentType(fileInfo.FullName, out var cType) ? cType : "application/octet-stream";
 
     // Check for Null section
