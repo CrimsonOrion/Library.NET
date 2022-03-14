@@ -1,4 +1,6 @@
-﻿namespace Library.NET.Mailer.Models;
+﻿using MailKit.Security;
+
+namespace Library.NET.Mailer.Models;
 public class SmtpOptionsModel
 {
     public string Server { get; set; } = string.Empty;
@@ -10,4 +12,5 @@ public class SmtpOptionsModel
     public string PreferredEncoding { get; set; } = string.Empty;
     public bool UsePickupDirectory { get; set; } = false;
     public string MailPickupDirectory { get; set; } = string.Empty;
+    public SecureSocketOptions SecureSocketOptions { get; set; } = SecureSocketOptions.Auto;
 }

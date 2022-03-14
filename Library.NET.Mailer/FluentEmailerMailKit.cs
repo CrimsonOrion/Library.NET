@@ -6,6 +6,8 @@ using FluentEmail.Razor;
 using Library.NET.Helpers;
 using Library.NET.Mailer.Models;
 
+using MailKit.Security;
+
 namespace Library.NET.Mailer;
 public class FluentEmailerMailKit : IEmailer
 {
@@ -16,7 +18,7 @@ public class FluentEmailerMailKit : IEmailer
     {
     }
 
-    public IEmailer SetOptions(AddressModel fromAddress, IList<AddressModel> toAddresses, IList<AddressModel> ccAddresses, IList<AddressModel> bccAddresses, AddressModel replyToAddress, string subject, string body, IList<FileInfo> attachments, string template, bool isBodyHTML, string server, int port, string user, string password, bool useSSL, bool requiresAuthentication, string preferredEncoding, bool usePickupDirectory, string mailPickupDirectory)
+    public IEmailer SetOptions(AddressModel fromAddress, IList<AddressModel> toAddresses, IList<AddressModel> ccAddresses, IList<AddressModel> bccAddresses, AddressModel replyToAddress, string subject, string body, IList<FileInfo> attachments, string template, bool isBodyHTML, string server, int port, string user, string password, bool useSSL, bool requiresAuthentication, string preferredEncoding, bool usePickupDirectory, string mailPickupDirectory, SecureSocketOptions secureSocketOptions)
     {
         EmailOptions = new EmailOptionsModel()
         {
@@ -42,7 +44,8 @@ public class FluentEmailerMailKit : IEmailer
             RequiresAuthentication = requiresAuthentication,
             PreferredEncoding = preferredEncoding,
             UsePickupDirectory = usePickupDirectory,
-            MailPickupDirectory = mailPickupDirectory
+            MailPickupDirectory = mailPickupDirectory,
+            SecureSocketOptions = secureSocketOptions
         };
 
         return this;
@@ -96,7 +99,7 @@ public class FluentEmailerMailKit : IEmailer
 
     private IFluentEmail GenerateEmail()
     {
-        MailKitSender sender = new MailKitSender(new SmtpClientOptions
+        MailKitSender sender = new(new SmtpClientOptions
         {
             Server = SmtpOptions.Server,
             Port = SmtpOptions.Port,
@@ -107,7 +110,15 @@ public class FluentEmailerMailKit : IEmailer
             PreferredEncoding = SmtpOptions.PreferredEncoding,
             UsePickupDirectory = SmtpOptions.UsePickupDirectory,
             MailPickupDirectory = SmtpOptions.MailPickupDirectory,
-            SocketOptions = SmtpOptions.UseSsl ? MailKit.Security.SecureSocketOptions.Auto : MailKit.Security.SecureSocketOptions.None
+            SocketOptions = SmtpOptions.SecureSocketOptions switch
+            {
+                SecureSocketOptions.None => MailKit.Security.SecureSocketOptions.None,
+                SecureSocketOptions.Auto => MailKit.Security.SecureSocketOptions.Auto,
+                SecureSocketOptions.SslOnConnect => MailKit.Security.SecureSocketOptions.SslOnConnect,
+                SecureSocketOptions.StartTls => MailKit.Security.SecureSocketOptions.StartTls,
+                SecureSocketOptions.StartTlsWhenAvailable => MailKit.Security.SecureSocketOptions.StartTlsWhenAvailable,
+                _ => MailKit.Security.SecureSocketOptions.Auto
+            }
         });
 
         Email.DefaultSender = sender;
