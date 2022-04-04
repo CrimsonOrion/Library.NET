@@ -1,17 +1,21 @@
-﻿using Dapper;
+﻿using System.Data;
+using System.Data.Odbc;
+
+using Dapper;
 
 using Library.NET.Logging;
 
-using System.Data;
-using System.Data.Odbc;
-
 namespace Library.NET.DataAccess;
+
+/// <summary>
+/// Data Access class with synchronous and asynchronous CRUD methods to connect to a database using ODBC.
+/// </summary>
 public class OdbcDataAccess : IOdbcDataAccess
 {
     public IEnumerable<T> GetData<T>(string queryOrStoredProcedure, string connectionString, bool isStoredProcedure, int? commandTimeout)
     {
         using IDbConnection conn = new OdbcConnection(connectionString);
-        var rows = isStoredProcedure ?
+        IEnumerable<T> rows = isStoredProcedure ?
             conn.Query<T>(queryOrStoredProcedure, commandType: CommandType.StoredProcedure, commandTimeout: commandTimeout) :
             conn.Query<T>(queryOrStoredProcedure, commandTimeout: commandTimeout);
 
@@ -21,7 +25,7 @@ public class OdbcDataAccess : IOdbcDataAccess
     public IEnumerable<T> GetData<T, U>(string queryOrStoredProcedure, string connectionString, U parameters, bool isStoredProcedure, int? commandTimeout)
     {
         using IDbConnection conn = new OdbcConnection(connectionString);
-        var rows = isStoredProcedure ?
+        IEnumerable<T> rows = isStoredProcedure ?
             conn.Query<T>(queryOrStoredProcedure, GetParameters(parameters), commandType: CommandType.StoredProcedure, commandTimeout: commandTimeout) :
             conn.Query<T>(queryOrStoredProcedure, commandTimeout: commandTimeout);
 
@@ -55,7 +59,7 @@ public class OdbcDataAccess : IOdbcDataAccess
     public async Task<IEnumerable<T>> GetDataAsync<T>(string queryOrStoredProcedure, string connectionString, bool isStoredProcedure, int? commandTimeout)
     {
         using IDbConnection conn = new OdbcConnection(connectionString);
-        var rows = isStoredProcedure ?
+        IEnumerable<T> rows = isStoredProcedure ?
             await conn.QueryAsync<T>(queryOrStoredProcedure, commandType: CommandType.StoredProcedure, commandTimeout: commandTimeout) :
             await conn.QueryAsync<T>(queryOrStoredProcedure, commandTimeout: commandTimeout);
 
@@ -65,7 +69,7 @@ public class OdbcDataAccess : IOdbcDataAccess
     public async Task<IEnumerable<T>> GetDataAsync<T, U>(string queryOrStoredProcedure, string connectionString, U parameters, bool isStoredProcedure, int? commandTimeout)
     {
         using IDbConnection conn = new OdbcConnection(connectionString);
-        var rows = isStoredProcedure ?
+        IEnumerable<T> rows = isStoredProcedure ?
             await conn.QueryAsync<T>(queryOrStoredProcedure, GetParameters(parameters), commandType: CommandType.StoredProcedure, commandTimeout: commandTimeout) :
             await conn.QueryAsync<T>(queryOrStoredProcedure, commandTimeout: commandTimeout);
 
@@ -92,7 +96,7 @@ public class OdbcDataAccess : IOdbcDataAccess
     {
         using IDbConnection conn = new OdbcConnection(connectionString);
         conn.Open();
-        var trans = conn.BeginTransaction();
+        IDbTransaction trans = conn.BeginTransaction();
         var affectedRecords = 0;
         try
         {
@@ -112,9 +116,9 @@ public class OdbcDataAccess : IOdbcDataAccess
     {
         using IDbConnection conn = new OdbcConnection(connectionString);
         conn.Open();
-        var trans = conn.BeginTransaction();
+        IDbTransaction trans = conn.BeginTransaction();
         var affectedRecords = 0;
-        foreach (var item in data)
+        foreach (T item in data)
         {
             try
             {
@@ -146,15 +150,21 @@ public class OdbcDataAccess : IOdbcDataAccess
         return conn.State == ConnectionState.Open;
     }
 
+    /// <summary>
+    /// Creates new <see cref="DynamicParameters"/> with parameters
+    /// </summary>
+    /// <typeparam name="T">Type for <paramref name="parameters"/></typeparam>
+    /// <param name="parameters">Parameters for the stored procedure or query</param>
+    /// <returns><see cref="DynamicParameters"/> to be inserted into the query or stored procedure</returns>
     private static DynamicParameters GetParameters<T>(T parameters)
     {
         if (parameters != null)
         {
-            var p = new DynamicParameters();
+            DynamicParameters p = new DynamicParameters();
 
             if (parameters is IDictionary<string, dynamic> dictionary)
             {
-                foreach (var para in dictionary)
+                foreach (KeyValuePair<string, dynamic> para in dictionary)
                 {
                     p.Add(para.Key, para.Value);
                 }
