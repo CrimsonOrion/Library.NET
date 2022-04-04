@@ -4,7 +4,8 @@ Libraries used in custom applications. Library.NET is built in .NET 6.0 for .NET
 ## Library.NET.Cryptography
 Info coming soon!
 
-## Library.NET.DataAccess
+## Library.NET.DataAccess (<a href="https://www.nuget.org/packages/Library.NET.DataAccess/">NuGet Package link</a>)
+
 So far, it has two classes: `MsSqlDataAccess` and `OdbcDataAccess`. These both implement `ISqlDataAccess` & `IOdbcDataAccess`, respectively, and can be used for dependancy injection using these interfaces.
 
 ### Planned implementations
