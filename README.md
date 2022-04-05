@@ -10,9 +10,6 @@ Info coming soon!
 ## Library.NET.Events
 Info coming soon!
 
-## Library.NET.Helpers
-Info coming soon!
-
 ## Library.NET.Logging (<a href="https://www.nuget.org/packages/Library.NET.Logging/">NuGet Package link</a>)
 [See the Readme](../main/Library.NET.Logging/README.md)
 
