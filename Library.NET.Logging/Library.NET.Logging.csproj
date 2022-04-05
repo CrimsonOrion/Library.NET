@@ -8,7 +8,7 @@
     <Authors>James Lynch</Authors>
     <Company>Crimson Orion Software</Company>
     <Description>Custom logging library package for applications targeting .NET 6.0+</Description>
-    <Copyright>2022</Copyright>
+    <Copyright>Copyright (c) Crimson Orion Software 2022</Copyright>
     <PackageProjectUrl>https://github.com/CrimsonOrion/Library.NET</PackageProjectUrl>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
