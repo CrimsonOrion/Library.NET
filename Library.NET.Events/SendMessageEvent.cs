@@ -1,4 +1,5 @@
 ﻿namespace Library.NET.Events;
+
 public delegate void OnSendMessageHandler(object sender, SendMessageEventArgs e);
 public class SendMessageEvent : ISendMessageEvent
 {
