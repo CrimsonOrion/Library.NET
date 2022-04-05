@@ -3,19 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library.NET.DataAccess", "Library.NET.DataAccess\Library.NET.DataAccess.csproj", "{403C9174-7281-4910-B050-BD9B7D86E42B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Library.NET.DataAccess", "Library.NET.DataAccess\Library.NET.DataAccess.csproj", "{403C9174-7281-4910-B050-BD9B7D86E42B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library.NET.Logging", "Library.NET.Logging\Library.NET.Logging.csproj", "{B44C6CFC-23A1-4586-869B-6C1C83E4CF10}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Library.NET.Logging", "Library.NET.Logging\Library.NET.Logging.csproj", "{B44C6CFC-23A1-4586-869B-6C1C83E4CF10}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library.NET.Mailer", "Library.NET.Mailer\Library.NET.Mailer.csproj", "{D640A180-3ABA-4501-9267-BD35BFCFFF9B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Library.NET.Mailer", "Library.NET.Mailer\Library.NET.Mailer.csproj", "{D640A180-3ABA-4501-9267-BD35BFCFFF9B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library.NET.Helpers", "Library.NET.Helpers\Library.NET.Helpers.csproj", "{5B678732-74DE-4EC6-B622-CE01B163F80B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Library.NET.Helpers", "Library.NET.Helpers\Library.NET.Helpers.csproj", "{5B678732-74DE-4EC6-B622-CE01B163F80B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library.NET.Events", "Library.NET.Events\Library.NET.Events.csproj", "{A6451560-BE4E-4E0A-8A91-B692D529AD86}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Library.NET.Events", "Library.NET.Events\Library.NET.Events.csproj", "{A6451560-BE4E-4E0A-8A91-B692D529AD86}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library.NET.Cryptography", "Library.NET.Cryptography\Library.NET.Cryptography.csproj", "{5A2F7E9D-636E-4E06-82BE-96B85799FD3A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Library.NET.Cryptography", "Library.NET.Cryptography\Library.NET.Cryptography.csproj", "{5A2F7E9D-636E-4E06-82BE-96B85799FD3A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library.NET.SFTP", "Library.NET.SFTP\Library.NET.SFTP.csproj", "{F2ADDE00-9C5D-4BF3-8EB5-3F656485C207}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Library.NET.SFTP", "Library.NET.SFTP\Library.NET.SFTP.csproj", "{F2ADDE00-9C5D-4BF3-8EB5-3F656485C207}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tester", "Tester\Tester.csproj", "{B2CD1AAD-F6DE-4A45-838A-F493C5040F5D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{F2ADDE00-9C5D-4BF3-8EB5-3F656485C207}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F2ADDE00-9C5D-4BF3-8EB5-3F656485C207}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F2ADDE00-9C5D-4BF3-8EB5-3F656485C207}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2CD1AAD-F6DE-4A45-838A-F493C5040F5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2CD1AAD-F6DE-4A45-838A-F493C5040F5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2CD1AAD-F6DE-4A45-838A-F493C5040F5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2CD1AAD-F6DE-4A45-838A-F493C5040F5D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
