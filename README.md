@@ -4,21 +4,8 @@ Libraries used in custom applications. Library.NET is built in .NET 6.0 for .NET
 ## Library.NET.Cryptography
 Info coming soon!
 
-## Library.NET.DataAccess (<a href="https://www.nuget.org/packages/Library.NET.DataAccess/">NuGet Package link</a>)
-
-So far, it has two classes: `MsSqlDataAccess` and `OdbcDataAccess`. These both implement `ISqlDataAccess` & `IOdbcDataAccess`, respectively, and can be used for dependancy injection using these interfaces.
-
-### Planned implementations
-
-* MySql
-* MongoDb
-* PostgreSQL
-
-### Outside Dependencies
-
-* Dapper
-* Microsoft.Data.SqlClient
-* System.Data.Odbc
+## Library.NET.DataAccess ([NuGet Package link](https://www.nuget.org/packages/Library.NET.DataAccess/))
+[See the Readme](../main/Library.NET.DataAccess/README.md)
 
 ## Library.NET.Events
 Info coming soon!
@@ -26,8 +13,8 @@ Info coming soon!
 ## Library.NET.Helpers
 Info coming soon!
 
-## Library.NET.Logging
-Info coming soon!
+## Library.NET.Logging (<a href="https://www.nuget.org/packages/Library.NET.Logging/">NuGet Package link</a>)
+[See the Readme](../main/Library.NET.Logging/README.md)
 
 ## Library.NET.Mailer
 Info coming soon!
