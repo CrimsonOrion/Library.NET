@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>annotations</Nullable>
+    <PreserveCompilationContext>true</PreserveCompilationContext>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Library.NET.Cryptography\Library.NET.Cryptography.csproj" />
+    <ProjectReference Include="..\Library.NET.DataAccess\Library.NET.DataAccess.csproj" />
+    <ProjectReference Include="..\Library.NET.Events\Library.NET.Events.csproj" />
+    <ProjectReference Include="..\Library.NET.Helpers\Library.NET.Helpers.csproj" />
+    <ProjectReference Include="..\Library.NET.Logging\Library.NET.Logging.csproj" />
+    <ProjectReference Include="..\Library.NET.Mailer\Library.NET.Mailer.csproj" />
+    <ProjectReference Include="..\Library.NET.SFTP\Library.NET.SFTP.csproj" />
+  </ItemGroup>
+
+</Project>
