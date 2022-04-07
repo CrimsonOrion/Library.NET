@@ -3,7 +3,6 @@ using FluentEmail.Core.Models;
 using FluentEmail.MailKitSmtp;
 using FluentEmail.Razor;
 
-using Library.NET.Helpers;
 using Library.NET.Mailer.Models;
 
 using MailKit.Security;
