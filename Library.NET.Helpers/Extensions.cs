@@ -43,7 +43,7 @@ public static class Extensions
         }
 
         zip = zip.Trim();
-        if (zip.Length > 5 && !zip.Contains("-")) // If the zip is longer than 5 digits, add the '-' between the zip and extension
+        if (zip.Length > 5 && !zip.Contains('-')) // If the zip is longer than 5 digits, add the '-' between the zip and extension
         {
             zip = string.Concat(zip.AsSpan(0, 5), "-", zip[5..]);
         }
