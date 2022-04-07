@@ -9,10 +9,17 @@ using Library.NET.Mailer.Models;
 using MailKit.Security;
 
 namespace Library.NET.Mailer;
+
+/// <summary>
+/// Mailkit used to send emails
+/// </summary>
+/// <remarks>
+/// Outside References: <see cref="MailKit.Security"/>, <see cref="FluentEmail.Core"/>, <see cref="FluentEmail.MailKitSmtp"/>, and <see cref="FluentEmail.Razor"/>
+/// </remarks>
 public class FluentEmailerMailKit : IEmailer
 {
     public EmailOptionsModel EmailOptions { get; set; } = new();
-    public SmtpOptionsModel SmtpOptions { get; set; } = new();
+    public SmtpClientOptions SmtpOptions { get; set; } = new();
 
     public FluentEmailerMailKit()
     {
@@ -34,7 +41,7 @@ public class FluentEmailerMailKit : IEmailer
             IsBodyHTML = isBodyHTML
         };
 
-        SmtpOptions = new SmtpOptionsModel()
+        SmtpOptions = new SmtpClientOptions()
         {
             Server = server,
             Port = port,
@@ -45,59 +52,47 @@ public class FluentEmailerMailKit : IEmailer
             PreferredEncoding = preferredEncoding,
             UsePickupDirectory = usePickupDirectory,
             MailPickupDirectory = mailPickupDirectory,
-            SecureSocketOptions = secureSocketOptions
+            SocketOptions = secureSocketOptions
         };
 
         return this;
     }
 
-    public ResponseModel SendEmail()
-    {
-        return CreateAndSendEmail("");
-    }
+    public SendResponse SendEmail() => CreateAndSendEmail("");
 
-    public async Task<ResponseModel> SendEmailAsync()
-    {
-        return await CreateAndSendEmailAsync("");
-    }
+    public async Task<SendResponse> SendEmailAsync() => await CreateAndSendEmailAsync("");
 
-    public ResponseModel SendEmailWithTemplate<T>(T templateModel)
-    {
-        return CreateAndSendEmail(templateModel);
-    }
+    public SendResponse SendEmailWithTemplate<T>(T templateModel) => CreateAndSendEmail(templateModel);
 
-    public async Task<ResponseModel> SendEmailWithTemplateAsync<T>(T templateModel)
-    {
-        return await CreateAndSendEmailAsync(templateModel);
-    }
+    public async Task<SendResponse> SendEmailWithTemplateAsync<T>(T templateModel) => await CreateAndSendEmailAsync(templateModel);
 
-    private ResponseModel CreateAndSendEmail<T>(T templateModel)
+    private SendResponse CreateAndSendEmail<T>(T templateModel)
     {
-        IFluentEmail email = string.IsNullOrEmpty(EmailOptions.Template) ? GenerateEmail() : GenerateEmailWithTemplate(templateModel);
+        IFluentEmail email = string.IsNullOrEmpty(EmailOptions.Template) ? GenerateEmail<object>(null) : GenerateEmail(templateModel);
 
         SendResponse result = email.Send();
 
-        return new ResponseModel() { ErrorMessages = result.ErrorMessages, MessageId = result.MessageId, SetSuccessful = result.Successful };
+        return result;
     }
 
-    private async Task<ResponseModel> CreateAndSendEmailAsync<T>(T templateModel)
+    private async Task<SendResponse> CreateAndSendEmailAsync<T>(T templateModel)
     {
-        IFluentEmail email = string.IsNullOrEmpty(EmailOptions.Template) ? GenerateEmail() : GenerateEmailWithTemplate(templateModel);
+        IFluentEmail email = string.IsNullOrEmpty(EmailOptions.Template) ? GenerateEmail<object>(null) : GenerateEmail(templateModel);
         SendResponse result = new();
         try
         {
             result = await email.SendAsync();
-            return new ResponseModel() { ErrorMessages = result.ErrorMessages, MessageId = result.MessageId, SetSuccessful = result.Successful };
         }
         catch (Exception ex)
         {
             List<string> messages = new() { ex.Message };
             messages.AddRange(result.ErrorMessages);
-            return new ResponseModel() { ErrorMessages = messages, MessageId = result.MessageId, SetSuccessful = result.Successful };
         }
+
+        return result;
     }
 
-    private IFluentEmail GenerateEmail()
+    private IFluentEmail GenerateEmail<T>(T templateModel)
     {
         MailKitSender sender = new(new SmtpClientOptions
         {
@@ -110,7 +105,7 @@ public class FluentEmailerMailKit : IEmailer
             PreferredEncoding = SmtpOptions.PreferredEncoding,
             UsePickupDirectory = SmtpOptions.UsePickupDirectory,
             MailPickupDirectory = SmtpOptions.MailPickupDirectory,
-            SocketOptions = SmtpOptions.SecureSocketOptions switch
+            SocketOptions = SmtpOptions.SocketOptions switch
             {
                 SecureSocketOptions.None => MailKit.Security.SecureSocketOptions.None,
                 SecureSocketOptions.Auto => MailKit.Security.SecureSocketOptions.Auto,
@@ -122,11 +117,13 @@ public class FluentEmailerMailKit : IEmailer
         });
 
         Email.DefaultSender = sender;
+        Email.DefaultRenderer = EmailOptions.IsBodyHTML ? new RazorRenderer() : new FluentEmail.Core.Defaults.ReplaceRenderer();
 
         IFluentEmail email = new Email()
             .SetFrom(EmailOptions.FromAddress.EmailAddress, EmailOptions.FromAddress.DisplayName)
-            .ReplyTo(EmailOptions.ReplyToAddress.EmailAddress, EmailOptions.ReplyToAddress.DisplayName)
+            .ReplyTo(EmailOptions.ReplyToAddress.EmailAddress ?? EmailOptions.FromAddress.EmailAddress, EmailOptions.ReplyToAddress.DisplayName ?? EmailOptions.ReplyToAddress.DisplayName)
             .Subject(EmailOptions.Subject)
+            .Body(EmailOptions.Body, EmailOptions.IsBodyHTML)
             ;
 
         foreach (AddressModel to in EmailOptions.ToAddresses)
@@ -134,7 +131,7 @@ public class FluentEmailerMailKit : IEmailer
             email.To(to.EmailAddress, to.DisplayName);
         }
 
-        if (EmailOptions.CcAddresses != null && EmailOptions.CcAddresses.Any())
+        if (EmailOptions.CcAddresses.Any())
         {
             foreach (AddressModel cc in EmailOptions.CcAddresses)
             {
@@ -142,7 +139,7 @@ public class FluentEmailerMailKit : IEmailer
             }
         }
 
-        if (EmailOptions.BccAddresses != null && EmailOptions.BccAddresses.Any())
+        if (EmailOptions.BccAddresses.Any())
         {
             foreach (AddressModel bcc in EmailOptions.BccAddresses)
             {
@@ -150,36 +147,14 @@ public class FluentEmailerMailKit : IEmailer
             }
         }
 
-        if (!string.IsNullOrEmpty(EmailOptions.Body))
+        if (!string.IsNullOrEmpty(EmailOptions.Template))
         {
-            email.Body(EmailOptions.Body);
-        }
-
-        if (EmailOptions.IsBodyHTML)
-        {
-            email.Data.IsHtml = true;
-            Email.DefaultRenderer = new RazorRenderer();
+            email.UsingTemplate(EmailOptions.Template, templateModel);
         }
 
         foreach (FileInfo attach in EmailOptions.Attachments)
         {
             email.AttachFromFilename(attach.FullName, attach.GetContentType(), attach.Name);
-        }
-
-        return email;
-    }
-
-    //var template = new StringBuilder();
-    //template.AppendLine("Dear @Model.FirstName,");
-    //template.AppendLine("<p>Thanks for purchasing @Model.ProductName. We hope you enjoy it! </p>");
-    //template.AppendLine("- COS Team");
-    private IFluentEmail GenerateEmailWithTemplate<T>(T templateModel)
-    {
-        IFluentEmail email = GenerateEmail();
-
-        if (!string.IsNullOrEmpty(EmailOptions.Template))
-        {
-            email.UsingTemplate(EmailOptions.Template, templateModel);
         }
 
         return email;
