@@ -174,4 +174,5 @@ SendResponse result = emailer.SetOptions().SendEmailWithTemplate(new {FirstName 
 
 ### Outside Dependencies
 
-* [FluentEmail](https://github.com/lukencode/FluentEmail)
+* [FluentEmail.MailKit](https://www.nuget.org/packages/FluentEmail.MailKit/)
+* [FluentEmail.Razor](https://www.nuget.org/packages/FluentEmail.Razor/)
