@@ -74,6 +74,6 @@ Same as above with the exception of:
 
 ### Outside Dependencies
 
-* Dapper
-* Microsoft.Data.SqlClient
-* System.Data.Odbc
+* [Dapper](https://www.nuget.org/packages/Dapper)
+* [Microsoft.Data.SqlClient](https://www.nuget.org/packages/Microsoft.Data.SqlClient/)
+* [System.Data.Odbc](https://www.nuget.org/packages/System.Data.Odbc)
