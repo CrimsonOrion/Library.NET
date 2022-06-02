@@ -1,10 +1,6 @@
-﻿using System.Data;
+﻿using Microsoft.Data.SqlClient;
 
-using Dapper;
-
-using Library.NET.Logging;
-
-using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace Library.NET.DataAccess;
 
@@ -161,7 +157,7 @@ public class MsSqlDataAccess : ISqlDataAccess
     {
         if (parameters != null)
         {
-            DynamicParameters p = new DynamicParameters();
+            DynamicParameters p = new();
 
             if (parameters is IDictionary<string, dynamic> dictionary)
             {

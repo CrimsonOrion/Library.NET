@@ -1,26 +1,25 @@
-﻿using System.Data;
-using System.Data.Odbc;
+﻿using MySql.Data.MySqlClient;
+
+using System.Data;
 
 namespace Library.NET.DataAccess;
-
-/// <summary>
-/// Data Access class with synchronous and asynchronous CRUD methods to connect to a database using ODBC.
+// <summary>
+/// Data Access class with synchronous and asynchronous CRUD methods to connect to a MySQL database.
 /// </summary>
-public class OdbcDataAccess : IOdbcDataAccess
+public class MySqlDataAccess : ISqlDataAccess
 {
     public IEnumerable<T> GetData<T>(string queryOrStoredProcedure, string connectionString, bool isStoredProcedure, int? commandTimeout)
     {
-        using IDbConnection conn = new OdbcConnection(connectionString);
+        using IDbConnection conn = new MySqlConnection(connectionString);
         IEnumerable<T> rows = isStoredProcedure ?
             conn.Query<T>(queryOrStoredProcedure, commandType: CommandType.StoredProcedure, commandTimeout: commandTimeout) :
             conn.Query<T>(queryOrStoredProcedure, commandTimeout: commandTimeout);
 
         return rows;
     }
-
     public IEnumerable<T> GetData<T, U>(string queryOrStoredProcedure, string connectionString, U parameters, bool isStoredProcedure, int? commandTimeout)
     {
-        using IDbConnection conn = new OdbcConnection(connectionString);
+        using IDbConnection conn = new MySqlConnection(connectionString);
         IEnumerable<T> rows = isStoredProcedure ?
             conn.Query<T>(queryOrStoredProcedure, GetParameters(parameters), commandType: CommandType.StoredProcedure, commandTimeout: commandTimeout) :
             conn.Query<T>(queryOrStoredProcedure, commandTimeout: commandTimeout);
@@ -30,7 +29,7 @@ public class OdbcDataAccess : IOdbcDataAccess
 
     public int PostData(string queryOrStoredProcedure, string connectionString, bool isStoredProcedure, int? commandTimeout)
     {
-        using IDbConnection conn = new OdbcConnection(connectionString);
+        using IDbConnection conn = new MySqlConnection(connectionString);
         return isStoredProcedure ?
             conn.Execute(queryOrStoredProcedure, commandType: CommandType.StoredProcedure) :
             conn.Execute(queryOrStoredProcedure, commandTimeout: commandTimeout);
@@ -38,7 +37,7 @@ public class OdbcDataAccess : IOdbcDataAccess
 
     public int PostData<T>(string queryOrStoredProcedure, string connectionString, T parameters, bool isStoredProcedure, int? commandTimeout)
     {
-        using IDbConnection conn = new OdbcConnection(connectionString);
+        using IDbConnection conn = new MySqlConnection(connectionString);
         return isStoredProcedure ?
             conn.Execute(queryOrStoredProcedure, GetParameters(parameters), commandType: CommandType.StoredProcedure) :
             conn.Execute(queryOrStoredProcedure, commandTimeout: commandTimeout);
@@ -54,7 +53,7 @@ public class OdbcDataAccess : IOdbcDataAccess
 
     public async Task<IEnumerable<T>> GetDataAsync<T>(string queryOrStoredProcedure, string connectionString, bool isStoredProcedure, int? commandTimeout)
     {
-        using IDbConnection conn = new OdbcConnection(connectionString);
+        using IDbConnection conn = new MySqlConnection(connectionString);
         IEnumerable<T> rows = isStoredProcedure ?
             await conn.QueryAsync<T>(queryOrStoredProcedure, commandType: CommandType.StoredProcedure, commandTimeout: commandTimeout) :
             await conn.QueryAsync<T>(queryOrStoredProcedure, commandTimeout: commandTimeout);
@@ -64,7 +63,7 @@ public class OdbcDataAccess : IOdbcDataAccess
 
     public async Task<IEnumerable<T>> GetDataAsync<T, U>(string queryOrStoredProcedure, string connectionString, U parameters, bool isStoredProcedure, int? commandTimeout)
     {
-        using IDbConnection conn = new OdbcConnection(connectionString);
+        using IDbConnection conn = new MySqlConnection(connectionString);
         IEnumerable<T> rows = isStoredProcedure ?
             await conn.QueryAsync<T>(queryOrStoredProcedure, GetParameters(parameters), commandType: CommandType.StoredProcedure, commandTimeout: commandTimeout) :
             await conn.QueryAsync<T>(queryOrStoredProcedure, commandTimeout: commandTimeout);
@@ -74,7 +73,7 @@ public class OdbcDataAccess : IOdbcDataAccess
 
     public async Task<int> PostDataAsync(string queryOrStoredProcedure, string connectionString, bool isStoredProcedure, int? commandTimeout)
     {
-        using IDbConnection conn = new OdbcConnection(connectionString);
+        using IDbConnection conn = new MySqlConnection(connectionString);
         return isStoredProcedure ?
             await conn.ExecuteAsync(queryOrStoredProcedure, commandType: CommandType.StoredProcedure) :
             await conn.ExecuteAsync(queryOrStoredProcedure, commandTimeout: commandTimeout);
@@ -82,7 +81,7 @@ public class OdbcDataAccess : IOdbcDataAccess
 
     public async Task<int> PostDataAsync<T>(string queryOrStoredProcedure, string connectionString, T data, bool isStoredProcedure, int? commandTimeout)
     {
-        using IDbConnection conn = new OdbcConnection(connectionString);
+        using IDbConnection conn = new MySqlConnection(connectionString);
         return isStoredProcedure ?
             await conn.ExecuteAsync(queryOrStoredProcedure, data, commandType: CommandType.StoredProcedure) :
             await conn.ExecuteAsync(queryOrStoredProcedure, data, commandTimeout: commandTimeout);
@@ -90,7 +89,7 @@ public class OdbcDataAccess : IOdbcDataAccess
 
     public async Task<int> PostDataTransactionAsync<T>(string queryOrStoredProcedure, string connectionString, IEnumerable<T> data, ICustomLogger logger, bool isStoredProcedure, int? commandTimeout)
     {
-        using IDbConnection conn = new OdbcConnection(connectionString);
+        using IDbConnection conn = new MySqlConnection(connectionString);
         conn.Open();
         IDbTransaction trans = conn.BeginTransaction();
         var affectedRecords = 0;
@@ -100,7 +99,7 @@ public class OdbcDataAccess : IOdbcDataAccess
                 await conn.ExecuteAsync(queryOrStoredProcedure, data, transaction: trans, commandType: CommandType.StoredProcedure, commandTimeout: commandTimeout) :
                 await conn.ExecuteAsync(queryOrStoredProcedure, data, transaction: trans, commandTimeout: commandTimeout);
         }
-        catch (OdbcException ex)
+        catch (MySqlException ex)
         {
             logger.LogError(ex, "Error in Post");
         }
@@ -110,7 +109,7 @@ public class OdbcDataAccess : IOdbcDataAccess
 
     public async Task<int> PostDataTransactionForEachAsync<T>(string queryOrStoredProcedure, string connectionString, IEnumerable<T> data, ICustomLogger logger, bool isStoredProcedure, int? commandTimeout)
     {
-        using IDbConnection conn = new OdbcConnection(connectionString);
+        using IDbConnection conn = new MySqlConnection(connectionString);
         conn.Open();
         IDbTransaction trans = conn.BeginTransaction();
         var affectedRecords = 0;
@@ -122,7 +121,7 @@ public class OdbcDataAccess : IOdbcDataAccess
                     await conn.ExecuteAsync(queryOrStoredProcedure, item, transaction: trans, commandType: CommandType.StoredProcedure, commandTimeout: commandTimeout) :
                     await conn.ExecuteAsync(queryOrStoredProcedure, item, transaction: trans, commandTimeout: commandTimeout);
             }
-            catch (OdbcException ex)
+            catch (MySqlException ex)
             {
                 logger.LogError(ex, "Error in Post");
             }
@@ -141,7 +140,7 @@ public class OdbcDataAccess : IOdbcDataAccess
 
     public bool TestConnection(string connectionString)
     {
-        using IDbConnection conn = new OdbcConnection(connectionString);
+        using IDbConnection conn = new MySqlConnection(connectionString);
         conn.Open();
         return conn.State == ConnectionState.Open;
     }

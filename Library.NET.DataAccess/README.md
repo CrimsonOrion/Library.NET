@@ -68,7 +68,6 @@ Same as above with the exception of:
 
 ### Planned implementations
 
-* MySql
 * MongoDb
 * PostgreSQL
 
@@ -77,3 +76,4 @@ Same as above with the exception of:
 * [Dapper](https://www.nuget.org/packages/Dapper)
 * [Microsoft.Data.SqlClient](https://www.nuget.org/packages/Microsoft.Data.SqlClient/)
 * [System.Data.Odbc](https://www.nuget.org/packages/System.Data.Odbc)
+* [MySql.Data](https://www.nuget.org/packages/MySql.Data)
