@@ -4,7 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>annotations</Nullable>
-    <Version>2022.4.5.1</Version>
+    <Version>2022.6.2.1</Version>
     <Authors>James Lynch</Authors>
     <Company>Crimson Orion Software</Company>
     <Description>Data access library package for applications targeting .NET 6.0+ using Dapper as the data access framework</Description>
@@ -12,6 +12,7 @@
     <PackageProjectUrl>https://github.com/CrimsonOrion/Library.NET</PackageProjectUrl>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,6 +24,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Library.NET.Logging\Library.NET.Logging.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
