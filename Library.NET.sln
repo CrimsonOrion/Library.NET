@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Library.NET.Cryptography", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Library.NET.SFTP", "Library.NET.SFTP\Library.NET.SFTP.csproj", "{F2ADDE00-9C5D-4BF3-8EB5-3F656485C207}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tester", "Tester\Tester.csproj", "{91B7B1D8-2C47-4677-A8AE-3AB77993A2E8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{F2ADDE00-9C5D-4BF3-8EB5-3F656485C207}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F2ADDE00-9C5D-4BF3-8EB5-3F656485C207}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F2ADDE00-9C5D-4BF3-8EB5-3F656485C207}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91B7B1D8-2C47-4677-A8AE-3AB77993A2E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91B7B1D8-2C47-4677-A8AE-3AB77993A2E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91B7B1D8-2C47-4677-A8AE-3AB77993A2E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91B7B1D8-2C47-4677-A8AE-3AB77993A2E8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
