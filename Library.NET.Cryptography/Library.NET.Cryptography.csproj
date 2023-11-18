@@ -9,6 +9,7 @@
     <Description>Cryptography library package for applications targeting .NET 8.0+</Description>
     <Copyright>2023</Copyright>
     <PackageProjectUrl>https://github.com/CrimsonOrion/Library.NET</PackageProjectUrl>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>

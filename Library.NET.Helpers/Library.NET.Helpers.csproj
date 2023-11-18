@@ -11,6 +11,7 @@
     <Description>Helper methods for Library.NET packages</Description>
     <Copyright>Copyright (c) Crimson Orion Software 2023</Copyright>
     <PackageProjectUrl>https://github.com/CrimsonOrion/Library.NET</PackageProjectUrl>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 
 </Project>
