@@ -7,7 +7,7 @@ namespace Library.NET.Logging;
 /// </summary>
 public class CustomLogger : ICustomLogger
 {
-    public FileInfo LogFileInfo { get; set; } = null;
+    public FileInfo? LogFileInfo { get; set; }
     public bool OutputToConsole { get; set; } = true;
     public LogLevel LogLevel { get; set; } = LogLevel.Debug;
 

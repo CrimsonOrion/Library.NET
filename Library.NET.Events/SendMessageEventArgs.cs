@@ -1,9 +1,5 @@
 ﻿namespace Library.NET.Events;
-public class SendMessageEventArgs : EventArgs
+public class SendMessageEventArgs(string message) : EventArgs
 {
-    public string Message { get; set; }
-    public SendMessageEventArgs(string message)
-    {
-        Message = message;
-    }
+    public string Message { get; set; } = message;
 }

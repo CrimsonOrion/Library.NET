@@ -1,7 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
 
-using System.Data;
-
 namespace Library.NET.DataAccess;
 
 /// <summary>
@@ -142,7 +140,7 @@ public class MsSqlDataAccess : ISqlDataAccess
 
     public bool TestConnection(string connectionString)
     {
-        using IDbConnection conn = new SqlConnection(connectionString);
+        using SqlConnection conn = new(connectionString);
         conn.Open();
         return conn.State == ConnectionState.Open;
     }

@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.DataProtection;
 
 namespace Library.NET.Cryptography;
-public class Crypto : ICrypto
+public class Crypto(IDataProtectionProvider provider) : ICrypto
 {
-    private IDataProtector _protector;
-
-    public Crypto(IDataProtectionProvider provider) => _protector = provider.CreateProtector("Test");
+    private IDataProtector _protector = provider.CreateProtector("Test");
 
     public void ChangePurpose(string purpose) => _protector = _protector.CreateProtector(purpose);
 

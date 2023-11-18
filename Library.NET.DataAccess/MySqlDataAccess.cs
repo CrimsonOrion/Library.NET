@@ -1,7 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
 
-using System.Data;
-
 namespace Library.NET.DataAccess;
 // <summary>
 /// Data Access class with synchronous and asynchronous CRUD methods to connect to a MySQL database.
@@ -140,7 +138,7 @@ public class MySqlDataAccess : ISqlDataAccess
 
     public bool TestConnection(string connectionString)
     {
-        using IDbConnection conn = new MySqlConnection(connectionString);
+        using MySqlConnection conn = new(connectionString);
         conn.Open();
         return conn.State == ConnectionState.Open;
     }

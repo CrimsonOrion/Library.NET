@@ -1,5 +1,4 @@
-﻿using System.Data;
-using System.Data.Odbc;
+﻿using System.Data.Odbc;
 
 namespace Library.NET.DataAccess;
 
@@ -141,7 +140,7 @@ public class OdbcDataAccess : IOdbcDataAccess
 
     public bool TestConnection(string connectionString)
     {
-        using IDbConnection conn = new OdbcConnection(connectionString);
+        using OdbcConnection conn = new(connectionString);
         conn.Open();
         return conn.State == ConnectionState.Open;
     }

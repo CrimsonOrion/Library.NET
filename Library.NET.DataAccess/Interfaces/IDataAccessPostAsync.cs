@@ -1,6 +1,4 @@
-﻿using Library.NET.Logging;
-
-namespace Library.NET.DataAccess;
+﻿namespace Library.NET.DataAccess;
 
 /// <summary>
 /// Implements asynchronous post/insert functions. (Transactional post/insert functions can implement <see cref="ICustomLogger"/>. If you don't have one set up, skip it to create an error log to the console.)

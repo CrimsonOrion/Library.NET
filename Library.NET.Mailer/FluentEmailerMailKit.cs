@@ -84,8 +84,7 @@ public class FluentEmailerMailKit : IEmailer
         }
         catch (Exception ex)
         {
-            List<string> messages = new() { ex.Message };
-            messages.AddRange(result.ErrorMessages);
+            List<string> messages = [ex.Message, .. result.ErrorMessages];
         }
 
         return result;

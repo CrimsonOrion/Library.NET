@@ -8,7 +8,7 @@ public interface ICustomLogger
     /// <summary>
     /// <see cref="FileInfo"/> for the log file. Can be <c>null</c> to display only on the console.
     /// </summary>
-    FileInfo LogFileInfo { get; set; }
+    FileInfo? LogFileInfo { get; set; }
     /// <summary>
     /// Set the log level to filter the information that gets passed to the logger.
     /// </summary>
