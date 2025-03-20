@@ -1,6 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 
 namespace Library.NET.DataAccess;
+
 // <summary>
 /// Data Access class with synchronous and asynchronous CRUD methods to connect to a MySQL database.
 /// </summary>
@@ -15,6 +16,7 @@ public class MySqlDataAccess : ISqlDataAccess
 
         return rows;
     }
+
     public IEnumerable<T> GetData<T, U>(string queryOrStoredProcedure, string connectionString, U parameters, bool isStoredProcedure, int? commandTimeout)
     {
         using IDbConnection conn = new MySqlConnection(connectionString);
@@ -49,43 +51,43 @@ public class MySqlDataAccess : ISqlDataAccess
 
     public int DeleteData<T>(string queryOrStoredProcedure, string connectionString, T parameters, bool isStoredProcedure, int? commandTimeout) => PostData(queryOrStoredProcedure, connectionString, parameters, isStoredProcedure, commandTimeout);
 
-    public async Task<IEnumerable<T>> GetDataAsync<T>(string queryOrStoredProcedure, string connectionString, bool isStoredProcedure, int? commandTimeout)
+    public async Task<IEnumerable<T>> GetDataAsync<T>(string queryOrStoredProcedure, string connectionString, bool isStoredProcedure, int? commandTimeout, CancellationToken token)
     {
         using IDbConnection conn = new MySqlConnection(connectionString);
         IEnumerable<T> rows = isStoredProcedure ?
-            await conn.QueryAsync<T>(queryOrStoredProcedure, commandType: CommandType.StoredProcedure, commandTimeout: commandTimeout) :
-            await conn.QueryAsync<T>(queryOrStoredProcedure, commandTimeout: commandTimeout);
+            await conn.QueryAsync<T>(new(queryOrStoredProcedure, commandType: CommandType.StoredProcedure, commandTimeout: commandTimeout, cancellationToken: token)) :
+            await conn.QueryAsync<T>(new(queryOrStoredProcedure, commandTimeout: commandTimeout, cancellationToken: token));
 
         return rows;
     }
 
-    public async Task<IEnumerable<T>> GetDataAsync<T, U>(string queryOrStoredProcedure, string connectionString, U parameters, bool isStoredProcedure, int? commandTimeout)
+    public async Task<IEnumerable<T>> GetDataAsync<T, U>(string queryOrStoredProcedure, string connectionString, U parameters, bool isStoredProcedure, int? commandTimeout, CancellationToken token)
     {
         using IDbConnection conn = new MySqlConnection(connectionString);
         IEnumerable<T> rows = isStoredProcedure ?
-            await conn.QueryAsync<T>(queryOrStoredProcedure, GetParameters(parameters), commandType: CommandType.StoredProcedure, commandTimeout: commandTimeout) :
-            await conn.QueryAsync<T>(queryOrStoredProcedure, commandTimeout: commandTimeout);
+            await conn.QueryAsync<T>(new(queryOrStoredProcedure, GetParameters(parameters), commandType: CommandType.StoredProcedure, commandTimeout: commandTimeout, cancellationToken: token)) :
+            await conn.QueryAsync<T>(new(queryOrStoredProcedure, commandTimeout: commandTimeout, cancellationToken: token));
 
         return rows;
     }
 
-    public async Task<int> PostDataAsync(string queryOrStoredProcedure, string connectionString, bool isStoredProcedure, int? commandTimeout)
+    public async Task<int> PostDataAsync(string queryOrStoredProcedure, string connectionString, bool isStoredProcedure, int? commandTimeout, CancellationToken token)
     {
         using IDbConnection conn = new MySqlConnection(connectionString);
         return isStoredProcedure ?
-            await conn.ExecuteAsync(queryOrStoredProcedure, commandType: CommandType.StoredProcedure) :
-            await conn.ExecuteAsync(queryOrStoredProcedure, commandTimeout: commandTimeout);
+            await conn.ExecuteAsync(new(queryOrStoredProcedure, commandType: CommandType.StoredProcedure, commandTimeout: commandTimeout, cancellationToken: token)) :
+            await conn.ExecuteAsync(new(queryOrStoredProcedure, commandTimeout: commandTimeout, cancellationToken: token));
     }
 
-    public async Task<int> PostDataAsync<T>(string queryOrStoredProcedure, string connectionString, T data, bool isStoredProcedure, int? commandTimeout)
+    public async Task<int> PostDataAsync<T>(string queryOrStoredProcedure, string connectionString, T data, bool isStoredProcedure, int? commandTimeout, CancellationToken token)
     {
         using IDbConnection conn = new MySqlConnection(connectionString);
         return isStoredProcedure ?
-            await conn.ExecuteAsync(queryOrStoredProcedure, data, commandType: CommandType.StoredProcedure) :
-            await conn.ExecuteAsync(queryOrStoredProcedure, data, commandTimeout: commandTimeout);
+            await conn.ExecuteAsync(new(queryOrStoredProcedure, data, commandType: CommandType.StoredProcedure, cancellationToken: token)) :
+            await conn.ExecuteAsync(new(queryOrStoredProcedure, data, commandTimeout: commandTimeout, cancellationToken: token));
     }
 
-    public async Task<int> PostDataTransactionAsync<T>(string queryOrStoredProcedure, string connectionString, IEnumerable<T> data, ICustomLogger logger, bool isStoredProcedure, int? commandTimeout)
+    public async Task<int> PostDataTransactionAsync<T>(string queryOrStoredProcedure, string connectionString, IEnumerable<T> data, ICustomLogger logger, bool isStoredProcedure, int? commandTimeout, CancellationToken token)
     {
         using IDbConnection conn = new MySqlConnection(connectionString);
         conn.Open();
@@ -94,8 +96,8 @@ public class MySqlDataAccess : ISqlDataAccess
         try
         {
             affectedRecords += isStoredProcedure ?
-                await conn.ExecuteAsync(queryOrStoredProcedure, data, transaction: trans, commandType: CommandType.StoredProcedure, commandTimeout: commandTimeout) :
-                await conn.ExecuteAsync(queryOrStoredProcedure, data, transaction: trans, commandTimeout: commandTimeout);
+                await conn.ExecuteAsync(new(queryOrStoredProcedure, data, transaction: trans, commandType: CommandType.StoredProcedure, commandTimeout: commandTimeout, cancellationToken: token)) :
+                await conn.ExecuteAsync(new(queryOrStoredProcedure, data, transaction: trans, commandTimeout: commandTimeout, cancellationToken: token));
         }
         catch (MySqlException ex)
         {
@@ -105,7 +107,7 @@ public class MySqlDataAccess : ISqlDataAccess
         return affectedRecords;
     }
 
-    public async Task<int> PostDataTransactionForEachAsync<T>(string queryOrStoredProcedure, string connectionString, IEnumerable<T> data, ICustomLogger logger, bool isStoredProcedure, int? commandTimeout)
+    public async Task<int> PostDataTransactionForEachAsync<T>(string queryOrStoredProcedure, string connectionString, IEnumerable<T> data, ICustomLogger logger, bool isStoredProcedure, int? commandTimeout, CancellationToken token)
     {
         using IDbConnection conn = new MySqlConnection(connectionString);
         conn.Open();
@@ -116,8 +118,8 @@ public class MySqlDataAccess : ISqlDataAccess
             try
             {
                 affectedRecords += isStoredProcedure ?
-                    await conn.ExecuteAsync(queryOrStoredProcedure, item, transaction: trans, commandType: CommandType.StoredProcedure, commandTimeout: commandTimeout) :
-                    await conn.ExecuteAsync(queryOrStoredProcedure, item, transaction: trans, commandTimeout: commandTimeout);
+                    await conn.ExecuteAsync(new(queryOrStoredProcedure, item, transaction: trans, commandType: CommandType.StoredProcedure, commandTimeout: commandTimeout, cancellationToken: token)) :
+                    await conn.ExecuteAsync(new(queryOrStoredProcedure, item, transaction: trans, commandTimeout: commandTimeout, cancellationToken: token));
             }
             catch (MySqlException ex)
             {
@@ -128,13 +130,17 @@ public class MySqlDataAccess : ISqlDataAccess
         return affectedRecords;
     }
 
-    public async Task<int> PutDataAsync(string queryOrStoredProcedure, string connectionString, bool isStoredProcedure, int? commandTimeout) => await PostDataAsync(queryOrStoredProcedure, connectionString, isStoredProcedure, commandTimeout);
+    public async Task<int> PutDataAsync(string queryOrStoredProcedure, string connectionString, bool isStoredProcedure, int? commandTimeout, CancellationToken token)
+        => await PostDataAsync(queryOrStoredProcedure, connectionString, isStoredProcedure, commandTimeout, token);
 
-    public async Task<int> PutDataAsync<T>(string queryOrStoredProcedure, string connectionString, T parameters, bool isStoredProcedure, int? commandTimeout) => await PostDataAsync(queryOrStoredProcedure, connectionString, parameters, isStoredProcedure, commandTimeout);
+    public async Task<int> PutDataAsync<T>(string queryOrStoredProcedure, string connectionString, T parameters, bool isStoredProcedure, int? commandTimeout, CancellationToken token)
+        => await PostDataAsync(queryOrStoredProcedure, connectionString, parameters, isStoredProcedure, commandTimeout, token);
 
-    public async Task<int> DeleteDataAsync(string queryOrStoredProcedure, string connectionString, bool isStoredProcedure, int? commandTimeout) => await PostDataAsync(queryOrStoredProcedure, connectionString, isStoredProcedure, commandTimeout);
+    public async Task<int> DeleteDataAsync(string queryOrStoredProcedure, string connectionString, bool isStoredProcedure, int? commandTimeout, CancellationToken token)
+        => await PostDataAsync(queryOrStoredProcedure, connectionString, isStoredProcedure, commandTimeout, token);
 
-    public async Task<int> DeleteDataAsync<T>(string queryOrStoredProcedure, string connectionString, T parameters, bool isStoredProcedure, int? commandTimeout) => await PostDataAsync(queryOrStoredProcedure, connectionString, parameters, isStoredProcedure, commandTimeout);
+    public async Task<int> DeleteDataAsync<T>(string queryOrStoredProcedure, string connectionString, T parameters, bool isStoredProcedure, int? commandTimeout, CancellationToken token)
+        => await PostDataAsync(queryOrStoredProcedure, connectionString, parameters, isStoredProcedure, commandTimeout, token);
 
     public bool TestConnection(string connectionString)
     {

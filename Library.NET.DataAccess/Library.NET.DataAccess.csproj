@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Version>2023.11.18.1</Version>
+    <Version>2025.3.19.1</Version>
     <Authors>James Lynch</Authors>
     <Company>Crimson Orion Software</Company>
     <Description>Data access library package for applications targeting .NET 8.0+ using Dapper as the data access framework</Description>
@@ -16,10 +16,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dapper" Version="2.1.21" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.2" />
-    <PackageReference Include="MySql.Data" Version="8.2.0" />
-    <PackageReference Include="System.Data.Odbc" Version="8.0.0" />
+    <PackageReference Include="Dapper" Version="2.1.66" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.1" />
+    <PackageReference Include="MySql.Data" Version="9.2.0" />
+    <PackageReference Include="System.Data.Odbc" Version="9.0.3" />
   </ItemGroup>
 
   <ItemGroup>

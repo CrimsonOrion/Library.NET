@@ -51,43 +51,43 @@ public class OdbcDataAccess : IOdbcDataAccess
 
     public int DeleteData<T>(string queryOrStoredProcedure, string connectionString, T parameters, bool isStoredProcedure, int? commandTimeout) => PostData(queryOrStoredProcedure, connectionString, parameters, isStoredProcedure, commandTimeout);
 
-    public async Task<IEnumerable<T>> GetDataAsync<T>(string queryOrStoredProcedure, string connectionString, bool isStoredProcedure, int? commandTimeout)
+    public async Task<IEnumerable<T>> GetDataAsync<T>(string queryOrStoredProcedure, string connectionString, bool isStoredProcedure, int? commandTimeout, CancellationToken token)
     {
         using IDbConnection conn = new OdbcConnection(connectionString);
         IEnumerable<T> rows = isStoredProcedure ?
-            await conn.QueryAsync<T>(queryOrStoredProcedure, commandType: CommandType.StoredProcedure, commandTimeout: commandTimeout) :
-            await conn.QueryAsync<T>(queryOrStoredProcedure, commandTimeout: commandTimeout);
+            await conn.QueryAsync<T>(new(queryOrStoredProcedure, commandType: CommandType.StoredProcedure, commandTimeout: commandTimeout, cancellationToken: token)) :
+            await conn.QueryAsync<T>(new(queryOrStoredProcedure, commandTimeout: commandTimeout, cancellationToken: token));
 
         return rows;
     }
 
-    public async Task<IEnumerable<T>> GetDataAsync<T, U>(string queryOrStoredProcedure, string connectionString, U parameters, bool isStoredProcedure, int? commandTimeout)
+    public async Task<IEnumerable<T>> GetDataAsync<T, U>(string queryOrStoredProcedure, string connectionString, U parameters, bool isStoredProcedure, int? commandTimeout, CancellationToken token)
     {
         using IDbConnection conn = new OdbcConnection(connectionString);
         IEnumerable<T> rows = isStoredProcedure ?
-            await conn.QueryAsync<T>(queryOrStoredProcedure, GetParameters(parameters), commandType: CommandType.StoredProcedure, commandTimeout: commandTimeout) :
-            await conn.QueryAsync<T>(queryOrStoredProcedure, commandTimeout: commandTimeout);
+            await conn.QueryAsync<T>(new(queryOrStoredProcedure, GetParameters(parameters), commandType: CommandType.StoredProcedure, commandTimeout: commandTimeout, cancellationToken: token)) :
+            await conn.QueryAsync<T>(new(queryOrStoredProcedure, commandTimeout: commandTimeout, cancellationToken: token));
 
         return rows;
     }
 
-    public async Task<int> PostDataAsync(string queryOrStoredProcedure, string connectionString, bool isStoredProcedure, int? commandTimeout)
+    public async Task<int> PostDataAsync(string queryOrStoredProcedure, string connectionString, bool isStoredProcedure, int? commandTimeout, CancellationToken token)
     {
         using IDbConnection conn = new OdbcConnection(connectionString);
         return isStoredProcedure ?
-            await conn.ExecuteAsync(queryOrStoredProcedure, commandType: CommandType.StoredProcedure) :
-            await conn.ExecuteAsync(queryOrStoredProcedure, commandTimeout: commandTimeout);
+            await conn.ExecuteAsync(new(queryOrStoredProcedure, commandType: CommandType.StoredProcedure, commandTimeout: commandTimeout, cancellationToken: token)) :
+            await conn.ExecuteAsync(new(queryOrStoredProcedure, commandTimeout: commandTimeout, cancellationToken: token));
     }
 
-    public async Task<int> PostDataAsync<T>(string queryOrStoredProcedure, string connectionString, T data, bool isStoredProcedure, int? commandTimeout)
+    public async Task<int> PostDataAsync<T>(string queryOrStoredProcedure, string connectionString, T data, bool isStoredProcedure, int? commandTimeout, CancellationToken token)
     {
         using IDbConnection conn = new OdbcConnection(connectionString);
         return isStoredProcedure ?
-            await conn.ExecuteAsync(queryOrStoredProcedure, data, commandType: CommandType.StoredProcedure) :
-            await conn.ExecuteAsync(queryOrStoredProcedure, data, commandTimeout: commandTimeout);
+            await conn.ExecuteAsync(new(queryOrStoredProcedure, data, commandType: CommandType.StoredProcedure, cancellationToken: token)) :
+            await conn.ExecuteAsync(new(queryOrStoredProcedure, data, commandTimeout: commandTimeout, cancellationToken: token));
     }
 
-    public async Task<int> PostDataTransactionAsync<T>(string queryOrStoredProcedure, string connectionString, IEnumerable<T> data, ICustomLogger logger, bool isStoredProcedure, int? commandTimeout)
+    public async Task<int> PostDataTransactionAsync<T>(string queryOrStoredProcedure, string connectionString, IEnumerable<T> data, ICustomLogger logger, bool isStoredProcedure, int? commandTimeout, CancellationToken token)
     {
         using IDbConnection conn = new OdbcConnection(connectionString);
         conn.Open();
@@ -96,8 +96,8 @@ public class OdbcDataAccess : IOdbcDataAccess
         try
         {
             affectedRecords += isStoredProcedure ?
-                await conn.ExecuteAsync(queryOrStoredProcedure, data, transaction: trans, commandType: CommandType.StoredProcedure, commandTimeout: commandTimeout) :
-                await conn.ExecuteAsync(queryOrStoredProcedure, data, transaction: trans, commandTimeout: commandTimeout);
+                await conn.ExecuteAsync(new(queryOrStoredProcedure, data, transaction: trans, commandType: CommandType.StoredProcedure, commandTimeout: commandTimeout, cancellationToken: token)) :
+                await conn.ExecuteAsync(new(queryOrStoredProcedure, data, transaction: trans, commandTimeout: commandTimeout, cancellationToken: token));
         }
         catch (OdbcException ex)
         {
@@ -107,7 +107,7 @@ public class OdbcDataAccess : IOdbcDataAccess
         return affectedRecords;
     }
 
-    public async Task<int> PostDataTransactionForEachAsync<T>(string queryOrStoredProcedure, string connectionString, IEnumerable<T> data, ICustomLogger logger, bool isStoredProcedure, int? commandTimeout)
+    public async Task<int> PostDataTransactionForEachAsync<T>(string queryOrStoredProcedure, string connectionString, IEnumerable<T> data, ICustomLogger logger, bool isStoredProcedure, int? commandTimeout, CancellationToken token)
     {
         using IDbConnection conn = new OdbcConnection(connectionString);
         conn.Open();
@@ -118,8 +118,8 @@ public class OdbcDataAccess : IOdbcDataAccess
             try
             {
                 affectedRecords += isStoredProcedure ?
-                    await conn.ExecuteAsync(queryOrStoredProcedure, item, transaction: trans, commandType: CommandType.StoredProcedure, commandTimeout: commandTimeout) :
-                    await conn.ExecuteAsync(queryOrStoredProcedure, item, transaction: trans, commandTimeout: commandTimeout);
+                    await conn.ExecuteAsync(new(queryOrStoredProcedure, item, transaction: trans, commandType: CommandType.StoredProcedure, commandTimeout: commandTimeout, cancellationToken: token)) :
+                    await conn.ExecuteAsync(new(queryOrStoredProcedure, item, transaction: trans, commandTimeout: commandTimeout, cancellationToken: token));
             }
             catch (OdbcException ex)
             {
@@ -130,13 +130,17 @@ public class OdbcDataAccess : IOdbcDataAccess
         return affectedRecords;
     }
 
-    public async Task<int> PutDataAsync(string queryOrStoredProcedure, string connectionString, bool isStoredProcedure, int? commandTimeout) => await PostDataAsync(queryOrStoredProcedure, connectionString, isStoredProcedure, commandTimeout);
+    public async Task<int> PutDataAsync(string queryOrStoredProcedure, string connectionString, bool isStoredProcedure, int? commandTimeout, CancellationToken token)
+        => await PostDataAsync(queryOrStoredProcedure, connectionString, isStoredProcedure, commandTimeout, token);
 
-    public async Task<int> PutDataAsync<T>(string queryOrStoredProcedure, string connectionString, T parameters, bool isStoredProcedure, int? commandTimeout) => await PostDataAsync(queryOrStoredProcedure, connectionString, parameters, isStoredProcedure, commandTimeout);
+    public async Task<int> PutDataAsync<T>(string queryOrStoredProcedure, string connectionString, T parameters, bool isStoredProcedure, int? commandTimeout, CancellationToken token)
+        => await PostDataAsync(queryOrStoredProcedure, connectionString, parameters, isStoredProcedure, commandTimeout, token);
 
-    public async Task<int> DeleteDataAsync(string queryOrStoredProcedure, string connectionString, bool isStoredProcedure, int? commandTimeout) => await PostDataAsync(queryOrStoredProcedure, connectionString, isStoredProcedure, commandTimeout);
+    public async Task<int> DeleteDataAsync(string queryOrStoredProcedure, string connectionString, bool isStoredProcedure, int? commandTimeout, CancellationToken token)
+        => await PostDataAsync(queryOrStoredProcedure, connectionString, isStoredProcedure, commandTimeout, token);
 
-    public async Task<int> DeleteDataAsync<T>(string queryOrStoredProcedure, string connectionString, T parameters, bool isStoredProcedure, int? commandTimeout) => await PostDataAsync(queryOrStoredProcedure, connectionString, parameters, isStoredProcedure, commandTimeout);
+    public async Task<int> DeleteDataAsync<T>(string queryOrStoredProcedure, string connectionString, T parameters, bool isStoredProcedure, int? commandTimeout, CancellationToken token)
+        => await PostDataAsync(queryOrStoredProcedure, connectionString, parameters, isStoredProcedure, commandTimeout, token);
 
     public bool TestConnection(string connectionString)
     {

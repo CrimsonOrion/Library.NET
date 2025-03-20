@@ -14,7 +14,7 @@ public interface IDataAccessGetAsync
     /// <param name="isStoredProcedure">Is the <paramref name="queryOrStoredProcedure"/> a stored procedure?</param>
     /// <param name="commandTimeout">How long before the query times out in seconds</param>
     /// <returns>Enumerable set of type <typeparamref name="T"/></returns>
-    Task<IEnumerable<T>> GetDataAsync<T>(string queryOrStoredProcedure, string connectionString, bool isStoredProcedure, int? commandTimeout);
+    Task<IEnumerable<T>> GetDataAsync<T>(string queryOrStoredProcedure, string connectionString, bool isStoredProcedure, int? commandTimeout, CancellationToken token);
 
     /// <summary>
     /// Executes an asynchronous procedure for retrieving data from the database using <see cref="StoredConnectionString.ConnectionString"/>.
@@ -24,7 +24,8 @@ public interface IDataAccessGetAsync
     /// <param name="isStoredProcedure">Is the <paramref name="queryOrStoredProcedure"/> a stored procedure?</param>
     /// <param name="commandTimeout">How long before the query times out in seconds</param>
     /// <returns>Enumerable set of type <typeparamref name="T"/></returns>
-    async Task<IEnumerable<T>> GetDataAsync<T>(string queryOrStoredProcedure, bool isStoredProcedure, int? commandTimeout) => await GetDataAsync<T>(queryOrStoredProcedure, StoredConnectionString.ConnectionString, isStoredProcedure, commandTimeout);
+    async Task<IEnumerable<T>> GetDataAsync<T>(string queryOrStoredProcedure, bool isStoredProcedure, int? commandTimeout, CancellationToken token)
+        => await GetDataAsync<T>(queryOrStoredProcedure, StoredConnectionString.ConnectionString, isStoredProcedure, commandTimeout, token);
 
     /// <summary>
     /// Executes an asynchronous procedure for retrieving data from the database with no timeout.
@@ -33,7 +34,8 @@ public interface IDataAccessGetAsync
     /// <param name="query">Query string</param>
     /// <param name="connectionString">Connection string</param>
     /// <returns>Enumerable set of type <typeparamref name="T"/></returns>
-    async Task<IEnumerable<T>> GetDataAsync<T>(string query, string connectionString) => await GetDataAsync<T>(query, connectionString, false, null);
+    async Task<IEnumerable<T>> GetDataAsync<T>(string query, string connectionString, CancellationToken token)
+        => await GetDataAsync<T>(query, connectionString, false, null, token);
 
     /// <summary>
     /// Executes an asynchronous procedure for retrieving data from the database using <see cref="StoredConnectionString.ConnectionString"/> with no timeout.
@@ -41,7 +43,8 @@ public interface IDataAccessGetAsync
     /// <typeparam name="T">Return type</typeparam>
     /// <param name="query">Query string</param>
     /// <returns>Enumerable set of type <typeparamref name="T"/></returns>
-    async Task<IEnumerable<T>> GetDataAsync<T>(string query) => await GetDataAsync<T>(query, StoredConnectionString.ConnectionString, false, null);
+    async Task<IEnumerable<T>> GetDataAsync<T>(string query, CancellationToken token)
+        => await GetDataAsync<T>(query, StoredConnectionString.ConnectionString, false, null, token);
 
     /// <summary>
     /// Executes an asynchronous procedure for retrieving data from the database with no timeout.
@@ -51,7 +54,8 @@ public interface IDataAccessGetAsync
     /// <param name="connectionString">Connection string</param>
     /// <param name="isStoredProcedure">Is the <paramref name="queryOrStoredProcedure"/> a stored procedure?</param>
     /// <returns>Enumerable set of type <typeparamref name="T"/></returns>
-    async Task<IEnumerable<T>> GetDataAsync<T>(string queryOrStoredProcedure, string connectionString, bool isStoredProcedure) => await GetDataAsync<T>(queryOrStoredProcedure, connectionString, isStoredProcedure, null);
+    async Task<IEnumerable<T>> GetDataAsync<T>(string queryOrStoredProcedure, string connectionString, bool isStoredProcedure, CancellationToken token)
+        => await GetDataAsync<T>(queryOrStoredProcedure, connectionString, isStoredProcedure, null, token);
 
     /// <summary>
     /// Executes an asynchronous procedure for retrieving data from the database using <see cref="StoredConnectionString.ConnectionString"/> with no timeout.
@@ -60,7 +64,8 @@ public interface IDataAccessGetAsync
     /// <param name="queryOrStoredProcedure">Query string or Stored Procedure name</param>
     /// <param name="isStoredProcedure">Is the <paramref name="queryOrStoredProcedure"/> a stored procedure?</param>
     /// <returns>Enumerable set of type <typeparamref name="T"/></returns>
-    async Task<IEnumerable<T>> GetDataAsync<T>(string queryOrStoredProcedure, bool isStoredProcedure) => await GetDataAsync<T>(queryOrStoredProcedure, StoredConnectionString.ConnectionString, isStoredProcedure, null);
+    async Task<IEnumerable<T>> GetDataAsync<T>(string queryOrStoredProcedure, bool isStoredProcedure, CancellationToken token)
+        => await GetDataAsync<T>(queryOrStoredProcedure, StoredConnectionString.ConnectionString, isStoredProcedure, null, token);
 
     /// <summary>
     /// Executes an asynchronous procedure for retrieving data from the database.
@@ -70,7 +75,8 @@ public interface IDataAccessGetAsync
     /// <param name="connectionString">Connection string</param>
     /// <param name="commandTimeout">How long before the query times out in seconds</param>
     /// <returns>Enumerable set of type <typeparamref name="T"/></returns>
-    async Task<IEnumerable<T>> GetDataAsync<T>(string query, string connectionString, int? commandTimeout) => await GetDataAsync<T>(query, connectionString, false, commandTimeout);
+    async Task<IEnumerable<T>> GetDataAsync<T>(string query, string connectionString, int? commandTimeout, CancellationToken token)
+        => await GetDataAsync<T>(query, connectionString, false, commandTimeout, token);
 
     /// <summary>
     /// Executes an asynchronous procedure for retrieving data from the database using <see cref="StoredConnectionString.ConnectionString"/>.
@@ -79,7 +85,8 @@ public interface IDataAccessGetAsync
     /// <param name="query">Query string</param>
     /// <param name="commandTimeout">How long before the query times out in seconds</param>
     /// <returns>Enumerable set of type <typeparamref name="T"/></returns>
-    async Task<IEnumerable<T>> GetDataAsync<T>(string query, int? commandTimeout) => await GetDataAsync<T>(query, StoredConnectionString.ConnectionString, false, commandTimeout);
+    async Task<IEnumerable<T>> GetDataAsync<T>(string query, int? commandTimeout, CancellationToken token)
+        => await GetDataAsync<T>(query, StoredConnectionString.ConnectionString, false, commandTimeout, token);
 
     /// <summary>
     /// Executes an asynchronous procedure for retrieving data from the database using parameters.
@@ -92,7 +99,7 @@ public interface IDataAccessGetAsync
     /// <param name="isStoredProcedure">Is the <paramref name="queryOrStoredProcedure"/> a stored procedure?</param>
     /// <param name="commandTimeout">How long before the query times out in seconds</param>
     /// <returns>Enumerable set of type <typeparamref name="T"/></returns>
-    Task<IEnumerable<T>> GetDataAsync<T, U>(string queryOrStoredProcedure, string connectionString, U parameters, bool isStoredProcedure, int? commandTimeout);
+    Task<IEnumerable<T>> GetDataAsync<T, U>(string queryOrStoredProcedure, string connectionString, U parameters, bool isStoredProcedure, int? commandTimeout, CancellationToken token);
 
     /// <summary>
     /// Executes an asynchronous procedure for retrieving data from the database using <see cref="StoredConnectionString.ConnectionString"/> and parameters.
@@ -104,7 +111,8 @@ public interface IDataAccessGetAsync
     /// <param name="isStoredProcedure">Is the <paramref name="queryOrStoredProcedure"/> a stored procedure?</param>
     /// <param name="commandTimeout">How long before the query times out in seconds</param>
     /// <returns>Enumerable set of type <typeparamref name="T"/></returns>
-    async Task<IEnumerable<T>> GetDataAsync<T, U>(string queryOrStoredProcedure, U parameters, bool isStoredProcedure, int? commandTimeout) => await GetDataAsync<T, U>(queryOrStoredProcedure, StoredConnectionString.ConnectionString, parameters, isStoredProcedure, commandTimeout);
+    async Task<IEnumerable<T>> GetDataAsync<T, U>(string queryOrStoredProcedure, U parameters, bool isStoredProcedure, int? commandTimeout, CancellationToken token)
+        => await GetDataAsync<T, U>(queryOrStoredProcedure, StoredConnectionString.ConnectionString, parameters, isStoredProcedure, commandTimeout, token);
 
     /// <summary>
     /// Executes an asynchronous procedure for retrieving data from the database using parameters with no timeout.
@@ -115,7 +123,8 @@ public interface IDataAccessGetAsync
     /// <param name="connectionString">Connection string</param>
     /// <param name="parameters">parameters where type is <see cref="Dapper.DynamicParameters"/> or <see cref="IDictionary{TKey, TValue}"/> with 'key' string and 'value' object</param>
     /// <returns>Enumerable set of type <typeparamref name="T"/></returns>
-    async Task<IEnumerable<T>> GetDataAsync<T, U>(string query, string connectionString, U parameters) => await GetDataAsync<T, U>(query, connectionString, parameters, false, null);
+    async Task<IEnumerable<T>> GetDataAsync<T, U>(string query, string connectionString, U parameters, CancellationToken token)
+        => await GetDataAsync<T, U>(query, connectionString, parameters, false, null, token);
 
     /// <summary>
     /// Executes an asynchronous procedure for retrieving data from the database using <see cref="StoredConnectionString.ConnectionString"/> and parameters with no timeout.
@@ -125,7 +134,8 @@ public interface IDataAccessGetAsync
     /// <param name="query">Query string</param>
     /// <param name="parameters">parameters where type is <see cref="Dapper.DynamicParameters"/> or <see cref="IDictionary{TKey, TValue}"/> with 'key' string and 'value' object</param>
     /// <returns>Enumerable set of type <typeparamref name="T"/></returns>
-    async Task<IEnumerable<T>> GetDataAsync<T, U>(string query, U parameters) => await GetDataAsync<T, U>(query, StoredConnectionString.ConnectionString, parameters, false, null);
+    async Task<IEnumerable<T>> GetDataAsync<T, U>(string query, U parameters, CancellationToken token)
+        => await GetDataAsync<T, U>(query, StoredConnectionString.ConnectionString, parameters, false, null, token);
 
     /// <summary>
     /// Executes an asynchronous procedure for retrieving data from the database using parameters with no timeout.
@@ -137,7 +147,8 @@ public interface IDataAccessGetAsync
     /// <param name="parameters">parameters where type is <see cref="Dapper.DynamicParameters"/> or <see cref="IDictionary{TKey, TValue}"/> with 'key' string and 'value' object</param>
     /// <param name="isStoredProcedure">Is the <paramref name="queryOrStoredProcedure"/> a stored procedure?</param>
     /// <returns>Enumerable set of type <typeparamref name="T"/></returns>
-    async Task<IEnumerable<T>> GetDataAsync<T, U>(string queryOrStoredProcedure, string connectionString, U parameters, bool isStoredProcedure) => await GetDataAsync<T, U>(queryOrStoredProcedure, connectionString, parameters, isStoredProcedure, null);
+    async Task<IEnumerable<T>> GetDataAsync<T, U>(string queryOrStoredProcedure, string connectionString, U parameters, bool isStoredProcedure, CancellationToken token)
+        => await GetDataAsync<T, U>(queryOrStoredProcedure, connectionString, parameters, isStoredProcedure, null, token);
 
     /// <summary>
     /// Executes an asynchronous procedure for retrieving data from the database using <see cref="StoredConnectionString.ConnectionString"/> and parameters with no timeout.
@@ -148,7 +159,8 @@ public interface IDataAccessGetAsync
     /// <param name="parameters">parameters where type is <see cref="Dapper.DynamicParameters"/> or <see cref="IDictionary{TKey, TValue}"/> with 'key' string and 'value' object</param>
     /// <param name="isStoredProcedure">Is the <paramref name="queryOrStoredProcedure"/> a stored procedure?</param>
     /// <returns>Enumerable set of type <typeparamref name="T"/></returns>
-    async Task<IEnumerable<T>> GetDataAsync<T, U>(string queryOrStoredProcedure, U parameters, bool isStoredProcedure) => await GetDataAsync<T, U>(queryOrStoredProcedure, StoredConnectionString.ConnectionString, parameters, isStoredProcedure, null);
+    async Task<IEnumerable<T>> GetDataAsync<T, U>(string queryOrStoredProcedure, U parameters, bool isStoredProcedure, CancellationToken token)
+        => await GetDataAsync<T, U>(queryOrStoredProcedure, StoredConnectionString.ConnectionString, parameters, isStoredProcedure, null, token);
 
     /// <summary>
     /// Executes an asynchronous procedure for retrieving data from the database using parameters.
@@ -160,7 +172,8 @@ public interface IDataAccessGetAsync
     /// <param name="parameters">parameters where type is <see cref="Dapper.DynamicParameters"/> or <see cref="IDictionary{TKey, TValue}"/> with 'key' string and 'value' object</param>
     /// <param name="commandTimeout">How long before the query times out in seconds</param>
     /// <returns>Enumerable set of type <typeparamref name="T"/></returns>
-    async Task<IEnumerable<T>> GetDataAsync<T, U>(string query, string connectionString, U parameters, int? commandTimeout) => await GetDataAsync<T, U>(query, connectionString, parameters, false, commandTimeout);
+    async Task<IEnumerable<T>> GetDataAsync<T, U>(string query, string connectionString, U parameters, int? commandTimeout, CancellationToken token)
+        => await GetDataAsync<T, U>(query, connectionString, parameters, false, commandTimeout, token);
 
     /// <summary>
     /// Executes an asynchronous procedure for retrieving data from the database using <see cref="StoredConnectionString.ConnectionString"/> and parameters.
@@ -171,5 +184,6 @@ public interface IDataAccessGetAsync
     /// <param name="parameters">parameters where type is <see cref="Dapper.DynamicParameters"/> or <see cref="IDictionary{TKey, TValue}"/> with 'key' string and 'value' object</param>
     /// <param name="commandTimeout">How long before the query times out in seconds</param>
     /// <returns>Enumerable set of type <typeparamref name="T"/></returns>
-    async Task<IEnumerable<T>> GetDataAsync<T, U>(string query, U parameters, int? commandTimeout) => await GetDataAsync<T, U>(query, StoredConnectionString.ConnectionString, parameters, false, commandTimeout);
+    async Task<IEnumerable<T>> GetDataAsync<T, U>(string query, U parameters, int? commandTimeout, CancellationToken token)
+        => await GetDataAsync<T, U>(query, StoredConnectionString.ConnectionString, parameters, false, commandTimeout, token);
 }
