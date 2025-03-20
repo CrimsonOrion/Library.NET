@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Version>2023.11.18.1</Version>
+    <Version>2025.3.19.1</Version>
     <Authors>James Lynch</Authors>
     <Company>Crimson Orion Software</Company>
     <Description>Library utilizing WinSCP for file transfers for applications targeting .NET 8.0+</Description>
@@ -13,7 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="WinSCP" Version="6.1.2" />
+    <PackageReference Include="WinSCP" Version="6.3.7" />
   </ItemGroup>
 
   <ItemGroup>
